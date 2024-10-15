@@ -1,4 +1,5 @@
 import Logo from "@/assets/Logo/Icon Colored.svg";
+import Form from "@/components/form";
 import Image from "next/image";
 
 export default function Home() {
@@ -11,6 +12,8 @@ export default function Home() {
         className="mx-auto"
         unoptimized
       />
+
+      <Form />
     </main>
   );
 }
