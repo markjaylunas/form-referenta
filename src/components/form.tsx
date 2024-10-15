@@ -1,5 +1,6 @@
 "use client";
 
+import { addFormData } from "@/actions/form-action";
 import { FormData } from "@/lib/type";
 import {
   Button,
@@ -9,9 +10,14 @@ import {
   Select,
   Textarea,
 } from "@headlessui/react";
-import { IconChevronDown } from "@tabler/icons-react";
+import {
+  IconArrowUpRight,
+  IconChevronDown,
+  IconCircleCheckFilled,
+} from "@tabler/icons-react";
 import clsx from "clsx";
 import { FormEvent, useState } from "react";
+import toast from "react-hot-toast";
 
 const initialForm: FormData = {
   firstName: "",
@@ -29,7 +35,42 @@ export default function Form() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log("form " + form);
+    try {
+      setIsLoading(true);
+
+      const { data, error } = await addFormData(form);
+
+      if (error && !data) {
+        throw new Error(error);
+      }
+
+      toast((t) => {
+        t.duration = 5000;
+        t.type = "success";
+        t.icon = <IconCircleCheckFilled className="size-6 text-success-900" />;
+        return (
+          <div className="flex gap-3 items-center">
+            <p className="text-sm">Sent data successfully!</p>
+            <a href={`form/${data}`} target="_blank">
+              <Button className="px-2 py-1 text-sm bg-primary-900 rounded-lg text-white mt-2 w-full flex items-center justify-center">
+                View
+                <IconArrowUpRight className="size-4 text-white" />
+              </Button>
+            </a>
+          </div>
+        );
+      });
+
+      reset();
+    } catch (error) {
+      console.error(error);
+      toast((t) => {
+        t.type = "error";
+        return "Something went wrong. Please check your internet connection.";
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const reset = () => setForm(initialForm);

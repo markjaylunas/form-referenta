@@ -1,6 +1,7 @@
 import Logo from "@/assets/Logo/Icon Colored.svg";
 import Form from "@/components/form";
 import Image from "next/image";
+import { Toaster } from "react-hot-toast";
 
 export default function Home() {
   return (
@@ -14,6 +15,8 @@ export default function Home() {
       />
 
       <Form />
+
+      <Toaster position="top-right" />
     </main>
   );
 }
